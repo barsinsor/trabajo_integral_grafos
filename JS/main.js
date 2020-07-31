@@ -3,6 +3,7 @@ var page = path.split("/").pop();
 if (page == "index.html") {
     window.onload = function() {
         function leerArchivo(e) {
+            var contenido
             var archivo = e.target.files[0];
             if (!archivo) {
                 return;
@@ -12,12 +13,13 @@ if (page == "index.html") {
                     var lector = new FileReader()
                     lector.onload = function(e) {
                         limpiarAsignacion()
-                        var contenido = e.target.result
+                        contenido = e.target.result
                         mostrarContenido(contenido)
                         contenido = splitContenido(contenido)
                         localStorage.setItem("contenido archivo", JSON.stringify(contenido))
                         let count = countCD(contenido)
                         asginarCamiones(count)
+                        localStorage.setItem("count", count)
                     }
                 }
                 lector.readAsText(archivo);
@@ -29,7 +31,9 @@ if (page == "index.html") {
             }
         }
 
+
         function enviarInformacion() {
+            var count = localStorage.getItem("count")
             var arrDatos = []
             for (i = 0; i < count; i++) {
                 var formCamion = document.getElementById("camion" + i).value
@@ -72,9 +76,6 @@ if (page == "index.html") {
                 div.innerHTML = `<form><div class="form-row"><div class="col"><label>Centro distribuidor${i + 1}</label></div><div class="col"><input id="camion${i}" type="text" class="form-control" placeholder="Numero de camion"></div><div class="col"><input id="cantidad${i}" type="text" class="form-control" placeholder="Cantidad de productos"></div></div></form>`
                 document.getElementById('asignarCamiones').appendChild(div)
             }
-            var btn = document.createElement('btn')
-            btn.innerHTML = '<a id="submit-button" href="../HTML/resultados.html" type="submit" class="btn btn-light">Aceptar</a>'
-            document.getElementById('asignarCamiones').appendChild(btn)
         }
 
         function limpiarAsignacion() {
@@ -85,8 +86,9 @@ if (page == "index.html") {
         document.getElementById('file-input')
             .addEventListener('change', leerArchivo, false);
 
-        // var submit = document.getElementById("submit-button")
-        // submit.onclick = enviarInformacion()
+        document.getElementById("submit-button")
+            .addEventListener('click', enviarInformacion, false);
+
     };
 }
 
@@ -94,6 +96,18 @@ if (page == "resultados.html") {
     window.onload = function() {
         contenido = JSON.parse(localStorage.getItem("contenido archivo"))
         forms = JSON.parse(localStorage.getItem("formulario"))
-        console.log(contenido)
+        arrCoordenadas = []
+
+        function toInt() {
+            for (let i = 0; i < contenido.length; i++) {
+                arrCoordenadas[i] = contenido[i][2].split(",")
+            }
+            for (let i = 0; i < arrCoordenadas.length; i++)
+                for (let j = 0; j < arrCoordenadas[i].length; j++) {
+                    arrCoordenadas[i][j] = parseInt(arrCoordenadas[i][j])
+                }
+            return arrCoordenadas
+        }
+        console.log(toInt())
     }
 }
