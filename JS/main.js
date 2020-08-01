@@ -77,28 +77,28 @@ function addProperties(contenido) {
     return contenido
 }
 
+function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+}
+
 function determinarDistancia(contenido, arrDistancias) {
+    var x, y, x1, y1, arrDistanciasFix
     for (let i = 0; i < contenido.length; i++) {
+        x = contenido[i][2]
+        y = contenido[i][3]
+        origen = contenido[i][0] + contenido[i][1]
         for (let j = 0; j < contenido.length; j++) {
+            x1 = contenido[j][2]
+            y1 = contenido[j][3]
+            calc = Math.sqrt(Math.pow(x1 - x, 2) + Math.pow(y1 - y, 2))
+            destino = contenido[j][0] + contenido[j][1]
+            arrAux = [origen, destino, calc]
             if (contenido[i] != contenido[j] & contenido[i][0] != "C" & contenido[i][0] != "c") {
-                var calc, x, x1, y, y1, id, desc
-                x = contenido[i][2]
-                y = contenido[i][3]
-                x1 = contenido[j][2]
-                y1 = contenido[j][3]
-                xf = x1 - x
-                yf = y1 - x
-                powX = Math.pow(xf, 2)
-                powY = Math.pow(yf, 2)
-                calc = Math.sqrt(powX + powY)
-                id = contenido[j][0]
-                desc = contenido[j][1]
-                arrAux = [id, desc, calc]
                 arrDistancias.push(arrAux)
             }
         }
-        contenido[i].push(arrDistancias)
     }
+    console.log(arrDistancias)
 }
 
 if (page == "index.html") {
