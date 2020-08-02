@@ -77,12 +77,8 @@ function addProperties(contenido) {
     return contenido
 }
 
-function onlyUnique(value, index, self) {
-    return self.indexOf(value) === index;
-}
-
 function determinarDistancia(contenido, arrDistancias) {
-    var x, y, x1, y1, arrDistanciasFix
+    var x, y, x1, y1
     for (let i = 0; i < contenido.length; i++) {
         x = contenido[i][2]
         y = contenido[i][3]
@@ -98,13 +94,11 @@ function determinarDistancia(contenido, arrDistancias) {
             }
         }
     }
-    console.log(arrDistancias)
+    return arrDistancias
 }
-
 if (page == "index.html") {
     window.onload = function() {
         function leerArchivo(e) {
-            var contenido
             var archivo = e.target.files[0];
             if (!archivo) {
                 return;
@@ -113,6 +107,7 @@ if (page == "index.html") {
                 if (archivo.type == 'text/plain') {
                     var lector = new FileReader()
                     lector.onload = function(e) {
+                        var contenido
                         limpiarAsignacion()
                         contenido = e.target.result
                         mostrarContenido(contenido)
@@ -131,12 +126,12 @@ if (page == "index.html") {
                 elemento.innerHTML = '¡El archivo seleccionado no es de texto plano, por favor, seleccione un archivo con el formato correcto!'
             }
         }
-        document.getElementById('file-input')
-            .addEventListener('change', leerArchivo, false);
 
         document.getElementById("submit-button")
             .addEventListener('click', enviarInformacion, false);
 
+        document.getElementById('file-input')
+            .addEventListener('change', leerArchivo, false);
     };
 }
 
@@ -149,7 +144,7 @@ if (page == "resultados.html") {
         toInt(contenido, arrCoordenadas)
         toIntCoords(contenido, arrCoordenadas)
         addProperties(contenido)
-        determinarDistancia(contenido, arrDistancias)
-        console.log(contenido)
+        arrDistancias = determinarDistancia(contenido, arrDistancias)
+        console.log(arrDistancias)
     }
 }
