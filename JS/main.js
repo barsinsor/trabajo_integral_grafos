@@ -121,13 +121,134 @@ function determinarDistancia(contenido, arrDistancias) {
             calc = Math.sqrt(Math.pow(x1 - x, 2) + Math.pow(y1 - y, 2))
             destino = contenido[j][0] + contenido[j][1]
             arrAux = [origen, destino, calc]
-            if (contenido[i] != contenido[j] & contenido[i][0] != "C" & contenido[i][0] != "c") {
+            if (contenido[i] != contenido[j] & contenido[i][0] != "C" & contenido[i][0] != "c" ) {
                 arrDistancias.push(arrAux)
             }
         }
     }
     return arrDistancias
 }
+
+function determinarDistanciaP(contenido, arrDistanciasP) {
+    var x, y, x1, y1
+    for (let i = 0; i < contenido.length; i++) {
+        x = contenido[i][2]
+        y = contenido[i][3]
+        origen = contenido[i][0] + contenido[i][1]
+        for (let j = 0; j < contenido.length; j++) {
+            x1 = contenido[j][2]
+            y1 = contenido[j][3]
+            calc = Math.sqrt(Math.pow(x1 - x, 2) + Math.pow(y1 - y, 2))
+            destino = contenido[j][0] + contenido[j][1]
+            arrAux = [origen, destino, calc]
+            if (contenido[i] != contenido[j] & contenido[i][0] != "C" & contenido[i][0] != "c" & contenido[j][0]!="C" &contenido[j][0]!="c") {
+                arrDistanciasP.push(arrAux)
+                }
+        }
+    }
+    return arrDistanciasP
+}
+
+
+function matricez(contenido,arrDistancias,arrDistanciasP){
+    var contadorM,contadorC,contadorP
+    var matrizdetransicion=[],extension=[],copiaArreglo=[],copiaMatriz=[],respuesta=[]
+    contadorC=countCD(contenido)
+    contadorP=countPuntoVenta(contenido)+1
+    count=0
+    while(count<contadorC){
+        for(let i = 0; i < arrDistancias.length; i++){
+            if(arrDistancias[i][1]=="C"+contenido[count][1]){
+                extension.push(arrDistancias[i][2])
+                copiaArreglo.push(arrDistancias[i][2])
+            }
+        }
+        count++
+    }
+    for(let i = 0; i < contadorP; i++){
+        auxmatriz=[]
+        auxmatriz2=[]
+        for(let j = 0; j < contadorP; j++){    
+            auxmatriz.push(0)
+            auxmatriz2.push(0)
+        }
+        matrizdetransicion.push(auxmatriz)
+        copiaMatriz.push(auxmatriz2)
+    }
+    contadorM=0
+    for(let i = 0; i < contadorP; i++){
+        for(let j = 0; j < contadorP; j++){    
+            if(i!=j & (i==0||j==0)){
+                if(j-1<0){
+                    matrizdetransicion[i][j]=extension[j]
+    
+                }
+                else {
+                    matrizdetransicion[i][j]=extension[j-1]
+                }
+            }
+            if(i!=j & j==0){
+                matrizdetransicion[i][j]=extension[i-1]
+            }
+            if(i!=j & i!=0 & j!=0){
+                matrizdetransicion[i][j]=arrDistanciasP[contadorM][2]
+                contadorM++
+            }
+        }
+                
+    }
+    for(let i = 0; i < contadorC; i++){
+        copiaArreglo.shift()
+    }
+    respuesta=caminoMasCorto(matrizdetransicion,copiaMatriz)
+    console.log(respuesta)
+    extension=copiaArreglo
+    // console.log(arrDistanciasP)
+    // console.log(extension)
+    // console.log(copiaArreglo)
+    console.log(matrizdetransicion)
+    
+}
+
+function caminoMasCorto(matrizdetransicion,copiaMatriz){
+    var comparador=0,x,y
+    var listaComparador=[],listaX=[],listaY=[]
+    for(let i = 0; i < matrizdetransicion.length; i++){
+        for(let j = 0; j < matrizdetransicion.length; j++){    
+            if(comparador==0 & matrizdetransicion[i][j]==0){
+                comparador=matrizdetransicion[i][j+1]
+                x=i
+                y=j+1
+            }
+            else if(comparador==0 & matrizdetransicion[i][j]!=0 & copiaMatriz[i][j]==0){
+                comparador=matrizdetransicion[i][j]
+                x=i
+                y=j
+            }
+            else if(matrizdetransicion[i][j]!=0 & comparador>matrizdetransicion[i][j] & copiaMatriz[i][j]==0){
+                comparador=matrizdetransicion[i][j]
+                x=i
+                y=j
+            }
+        }
+        listaComparador.push(comparador)
+        listaX.push(x)
+        listaY.push(y)
+        comparador=0
+        for(let k = 0; k < matrizdetransicion.length; k++){
+            for(let l = 0; l < matrizdetransicion.length; l++){
+                if(k==x || l==y){
+                    copiaMatriz[k][l]=1
+                }
+            }
+        }
+    }
+    console.log(listaX)
+    console.log(listaY)
+    listaComparador.push(matrizdetransicion[0][y])          //se lee desde el indice 1
+    return listaComparador
+}
+
 if (page == "index.html") {
     window.onload = function() {
         function leerArchivo(e) {
@@ -175,10 +296,13 @@ if (page == "resultados.html") {
         forms = JSON.parse(localStorage.getItem("formulario"))
         arrCoordenadas = []
         arrDistancias = []
+        arrDistanciasP=[]
         toInt(contenido, arrCoordenadas)
         toIntCoords(contenido, arrCoordenadas)
         addProperties(contenido)
         arrDistancias = determinarDistancia(contenido, arrDistancias)
+        arrDistanciasP=determinarDistanciaP(contenido,arrDistanciasP)
+        matricez(contenido,arrDistancias,arrDistanciasP)
         console.log(arrDistancias)
     }
 }
