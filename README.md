@@ -1,10 +1,10 @@
 # Trabajo integral Grafos y lenguajes formales
 
-_El proyecto consiste en calcular la ruta mas optima para una empresa de transportes, la cual entrega las coordenadas mediante un archivo txt para poder realizar las rutas_
+El proyecto consiste en calcular la ruta mas optima para una empresa de transportes, la cual entrega las coordenadas mediante un archivo txt para poder realizar las rutas
 
   
 ## Instrucciones de uso
-_El archivo de texto con las coordenadas debe tener el siguiente formato_
+El archivo de texto con las coordenadas debe tener el siguiente formato
 ```
 -C indica si es un centro de distribucion
 -P indica si es un punto de venta
@@ -19,7 +19,7 @@ _El archivo de texto con las coordenadas debe tener el siguiente formato_
     P;3;8,30
     P;4;6,2
 ```
-_Para iniciar la aplicacion hay que abrir el template index.html_
-_Seleccionar el archivo de tipo txt_
-_Ingresar los datos solicitados, que consisten en las cargas de cada camion para repartir y la asignacion de estos a los centros de distribucion_
-_Enviar los datos_
+- Para iniciar la aplicacion hay que abrir el template index.html
+- Seleccionar el archivo de tipo txt
+- Ingresar los datos solicitados, que consisten en las cargas de cada camion para repartir y la asignacion de estos a los centros de distribucion
+- Enviar los datos
